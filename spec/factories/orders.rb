@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :order do
-    device_imei { '123454567878932' }
-    device_model { 'Moto G3' }
-    annual_price { 330.00 }
+    device_imei { Faker::Number.number(15) }
+    device_model { Faker::Device.model_name }
+    annual_price { Faker::Commerce.price }
     installments { 12 }
     user { nil }
   end
