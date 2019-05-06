@@ -5,31 +5,37 @@ class UsersController < ApplicationController
   def index
     @users = User.all
 
-    json_response(@users)
+    render json: @users
   end
 
   # GET /users/1
   def show
-    json_response(@users)
+    render json: @user
   end
 
   # POST /users
   def create
     @user = User.new(user_params)
 
-    ijson_response(@users, :created)
+    if @user.save
+      render json: @user, status: :created, location: @user
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /users/1
   def update
-    @user.update(user_params)
-    head :no_content
+    if @user.update(user_params)
+      head :no_content
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
   end
 
   # DELETE /users/1
   def destroy
     @user.destroy
-    head :no_content
   end
 
   private
@@ -40,6 +46,6 @@ class UsersController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:name, :email, :cpf)
+      params.permit(:name, :email, :cpf)
     end
 end
